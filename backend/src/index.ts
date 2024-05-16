@@ -15,10 +15,15 @@ const app = express();
 const port = process.env.PORT || 3000;
 app.use(cors());
 
+// Serve the uploads folder
+app.use('/uploads', express.static('uploads'));
+
+// Create a storage to store the uploaded files on uploads folder
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
   },
+  // Rename the file to include the current date to avoid conflicts
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
   }
@@ -41,6 +46,7 @@ function normalizeFileName(fileName: string): string {
 }
 
 app.post('/upload', upload.single('video'), (req: express.Request, res: express.Response) => {
+  // Get the file from the request
   const file = req.file;
 
   if (!file) {
@@ -49,13 +55,11 @@ app.post('/upload', upload.single('video'), (req: express.Request, res: express.
 
   const { path, filename } = file;
 
-  console.log("filename : ", filename)
-  console.log("path : ", path)
-
-  // const inputFilePath = 'uploads/test.mp4';
   const inputFilePath = path;
-  const outputFilePath = `uploads/compress-${filename}`;
+  // Create the output file path without forbidden characters
+  const outputFilePath = `uploads/compress-${normalizeFileName(filename)}`;
 
+  // Compress the video and save it to the output file path
   ffmpeg(inputFilePath)
     .videoCodec('libx264')
     .audioCodec('aac')
@@ -63,16 +67,32 @@ app.post('/upload', upload.single('video'), (req: express.Request, res: express.
     .outputOptions('-b:a', '1M')
     .output(outputFilePath)
     .on('end', () => {
-      console.log('Conversion terminée !');
+      // delete the original file
       fs.unlinkSync(path);
       res.json({ result: true, file: outputFilePath, message: 'File uploaded and compressed successfully' });
     })
     .on('error', (err: Error) => {
       console.error('Erreur lors de la conversion :', err);
+      res.json({ result: false, message: 'Error converting the file' });
     })
     .run();
 })
 
+app.get('/files', (req, res) => {
+  // Get the path of the uploads folder
+  const directoryPath: string = path.join(__dirname, '../uploads');
+
+  fs.readdir(directoryPath, (err: NodeJS.ErrnoException | null, files: string[]) => {
+    if (err) {
+      console.error('Error getting the files', err);
+      return res.status(500).json({result: false, message : 'Server error'});
+    }
+
+    res.json({ result: true, files })
+  });
+
+
+})
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
