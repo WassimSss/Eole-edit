@@ -9,9 +9,11 @@ import multer from 'multer';
 import ffmpeg from 'fluent-ffmpeg';
 import path from 'path';
 import fs from 'fs';
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 3000;
+app.use(cors());
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -29,6 +31,7 @@ const upload = multer({ storage });
  * @param fileName - The original file name.
  * @returns The normalized file name.
  */
+
 function normalizeFileName(fileName: string): string {
   let normalized = fileName.replace(/\s+/g, '_');
 
@@ -37,36 +40,40 @@ function normalizeFileName(fileName: string): string {
   return normalized;
 }
 
-app.post('/upload', upload.single('video'), (req : express.Request , res : express.Response) => {
+app.post('/upload', upload.single('video'), (req: express.Request, res: express.Response) => {
   const file = req.file;
 
-  if(!file){
+  if (!file) {
     return res.status(400).send('Please upload a file');
   }
 
   const { path, filename } = file;
-  const normalizedFileName = normalizeFileName(filename);
 
-  const outputFilePath = `uploads/compress-${normalizedFileName}`;
+  console.log("filename : ", filename)
+  console.log("path : ", path)
 
-  ffmpeg(path)
-  .outputOptions('-flags:v', '+ildct')
+  // const inputFilePath = 'uploads/test.mp4';
+  const inputFilePath = path;
+  const outputFilePath = `uploads/compress-${filename}`;
+
+  ffmpeg(inputFilePath)
     .videoCodec('libx264')
     .audioCodec('aac')
-    .audioBitrate('1M')
+    .outputOptions('-flags', '+ildct')
+    .outputOptions('-b:a', '1M')
     .output(outputFilePath)
     .on('end', () => {
+      console.log('Conversion terminée !');
       fs.unlinkSync(path);
       res.json({ result: true, file: outputFilePath, message: 'File uploaded and compressed successfully' });
     })
     .on('error', (err: Error) => {
-      console.log('Error', err);
-      res.status(500).json({ result: true, message: 'File uploaded and compressed successfully' });
+      console.error('Erreur lors de la conversion :', err);
     })
     .run();
-  })
+})
 
 
-  app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-  });
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
