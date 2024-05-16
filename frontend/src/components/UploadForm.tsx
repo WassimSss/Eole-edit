@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
 import { bytesToMegabytes } from '../modules/bytesToMegabytes';
+import { toast, ToastContainer } from 'react-toastify';
 interface UploadFormState {
     file: File | null;
+    loading: boolean;
 }
 
 class UploadForm extends Component<{}, UploadFormState> {
@@ -10,6 +12,7 @@ class UploadForm extends Component<{}, UploadFormState> {
         super(props);
         this.state = {
             file: null,
+            loading: false
         }
     }
 
@@ -21,16 +24,13 @@ class UploadForm extends Component<{}, UploadFormState> {
                 file: file,
             })
         }
-
-        console.log("state : ", this.state);
-
-
     }
+
 
     handleSubmit = async () => {
 
         console.log("eee");
-        
+
         if (!this.state.file) return;
 
         console.log("ooo");
@@ -39,11 +39,18 @@ class UploadForm extends Component<{}, UploadFormState> {
         formData.append('video', this.state.file);
 
         try {
+            this.setState({ loading: true });
             const response = await fetch('http://localhost:3000/upload', {
                 method: 'POST',
                 body: formData
             });
             const data = await response.json();
+            this.setState({ loading: false });
+            if (data.result) {
+                toast.success(data.message);
+            } else {
+                toast.error(data.message);
+            }
             console.log(data);
         } catch (error) {
             console.error('Error uploading the file', error);
@@ -53,11 +60,15 @@ class UploadForm extends Component<{}, UploadFormState> {
     render() {
         return (
             <Container>
+                <ToastContainer />
                 <h1 style={{ color: 'green' }}>Upload Video</h1>
                 <Form >
                     <Form.Group controlId="formFile" className="mb-3 d-flex justify-content-center align-items-center">
                         <Form.Control type="file" onChange={this.handleChange} />
                     </Form.Group>
+                    {this.state.loading && <div className="spinner-border text-success" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>}
                     {this.state.file && (
                         <div>
                             <p>Name : {String(this.state.file.name)}Mo </p>
