@@ -45,7 +45,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ handleCloseVideo, urlVideoPla
 
         // If the video is playing, update the current time every 100ms
         if (isPlaying) {
-            console.log("videoRef.current.currentTime : ", videoRef.current?.currentTime);
             interval = setInterval(() => {
 
                 if (videoRef.current) {

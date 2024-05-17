@@ -55,7 +55,6 @@ app.post('/upload', upload.single('video'), (req: express.Request, res: express.
   const inputFilePath = file.path;
   // Create the output file path without forbidden characters
   const outputFilePath = path.join('uploads', `compress-${normalizeFileName(filename)}`);
-  console.log(" outputFilePath : ", outputFilePath);
 
   // Check if the uploads folder exists
 
