@@ -85,7 +85,7 @@ class UploadForm extends Component<UploadFormProps, UploadFormState> {
                 <h1 style={{ color: 'green' }}>Upload Video</h1>
                 <Form >
                     <Form.Group controlId="formFile" className="mb-3 d-flex justify-content-center align-items-center">
-                        <Form.Control type="file" onChange={this.handleChange} />
+                        <Form.Control type="file" onChange={this.handleChange} accept="video/mp4,video/x-m4v,video/*" />
                     </Form.Group>
                     {this.state.loading && <div className="spinner-border text-success" role="status">
                         <span className="visually-hidden">Loading...</span>
