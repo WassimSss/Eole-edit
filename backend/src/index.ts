@@ -43,9 +43,14 @@ app.post('/upload', upload.single('video'), (req: express.Request, res: express.
   const file = req.file;
 
   if (!file) {
-    return res.status(400).send('Please upload a file');
+    return res.status(400).json({result: false, message : 'Please upload a file'});
   }
-  const { filename } = file;
+
+  // Check if the file is a video
+  const { filename, mimetype } = file;
+  if (!mimetype.includes('video')) {
+    return res.status(400).json({ result: false, message: 'Please upload a video file' });
+  }
 
   const inputFilePath = file.path;
   // Create the output file path without forbidden characters
