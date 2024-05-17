@@ -5,6 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import UploadForm from './components/UploadForm';
 import VideoList from './components/VideoList';
 import VideoPlayer from './components/VideoPlayer';
+import { Header } from './components/Header';
+import { Container } from 'react-bootstrap';
 
 const App: React.FC = () => {
   const [refreshList, setRefreshList] = useState<boolean>(false);
@@ -31,7 +33,8 @@ const App: React.FC = () => {
   }
 
   return (
-    <>
+    <div className='d-flex justify-content-center align-items-center flex-column' >
+      <Header />
       {urlVideoPlaying && (<VideoPlayer
         handleCloseVideo={handleCloseVideo}
         urlVideoPlaying={urlVideoPlaying}
@@ -39,7 +42,7 @@ const App: React.FC = () => {
       />)}
       <UploadForm onUploadComplete={handleRefreshList} />
       <VideoList refreshList={refreshList} handlePlayVideo={handlePlayVideo} />
-    </>
+    </ div >
   );
 }
 
