@@ -80,27 +80,26 @@ class UploadForm extends Component<UploadFormProps, UploadFormState> {
 
     render() {
         return (
-            <Container>
+            <Container className="mt-5 d-flex flex-column align-items-center">
                 <ToastContainer />
-                <h1 style={{ color: 'green' }}>Upload Video</h1>
-                <Form >
-                    <Form.Group controlId="formFile" className="mb-3 d-flex justify-content-center align-items-center">
-                        <Form.Control type="file" onChange={this.handleChange} accept="video/mp4,video/x-m4v,video/*" />
-                    </Form.Group>
-                    {this.state.loading && <div className="spinner-border text-success" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>}
-                    {this.state.file && (
-                        <div>
-                            <p>Name : {String(this.state.file.name)}</p>
-                            <p>Size : {String(bytesToMegabytes(this.state.file.size))}Mo </p>
-                            <p>Type : {String(this.state.file.type)} </p>
-                        </div>
-                    )}
-                    <Button variant="success" onClick={this.handleSubmit}>
+                <h1 className='text-success m-4'>Upload Video</h1>
+                <div className='mt-3 d-flex justify-content-center align-items-center w-75' >
+                    <input type="file" className='form-control w-75' onChange={this.handleChange} accept="video/mp4,video/x-m4v,video/*" />
+                    <button className='form-control bg-success text-white w-25' onClick={this.handleSubmit}>
                         Upload
-                    </Button>
-                </Form>
+                    </button>
+                </div>
+                {this.state.loading && <div className="spinner-border text-success" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>}
+                {this.state.file && (
+                    <div>
+                        <p>Name : {String(this.state.file.name)}</p>
+                        <p>Size : {String(bytesToMegabytes(this.state.file.size))}Mo </p>
+                        <p>Type : {String(this.state.file.type)} </p>
+                    </div>
+                )}
+
             </Container>
         );
     }
