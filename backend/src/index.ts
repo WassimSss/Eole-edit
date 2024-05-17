@@ -43,14 +43,19 @@ app.post('/upload', upload.single('video'), (req: express.Request, res: express.
   const file = req.file;
 
   if (!file) {
-    return res.status(400).send('Please upload a file');
+    return res.status(400).json({result: false, message : 'Please upload a file'});
   }
+  
   const { filename } = file;
 
   const inputFilePath = file.path;
   // Create the output file path without forbidden characters
   const outputFilePath = path.join('uploads', `compress-${normalizeFileName(filename)}`);
   console.log(" outputFilePath : ", outputFilePath);
+
+  // Check if the uploads folder exists
+
+
   // Compress the video and save it to the output file path
   ffmpeg(inputFilePath)
     .videoCodec('libx264')
