@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Button, Container } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { bytesToMegabytes } from '../modules/bytesToMegabytes';
 import { toast, ToastContainer } from 'react-toastify';
 
@@ -89,11 +89,11 @@ class UploadForm extends Component<UploadFormProps, UploadFormState> {
                         Upload
                     </button>
                 </div>
-                {this.state.loading && <div className="spinner-border text-success" role="status">
+                {this.state.loading && <div className="spinner-border text-success m-4" role="status">
                     <span className="visually-hidden">Loading...</span>
                 </div>}
                 {this.state.file && (
-                    <div>
+                    <div className="mt-4">
                         <p>Name : {String(this.state.file.name)}</p>
                         <p>Size : {String(bytesToMegabytes(this.state.file.size))}Mo </p>
                         <p>Type : {String(this.state.file.type)} </p>

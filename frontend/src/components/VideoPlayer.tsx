@@ -1,4 +1,3 @@
-import { current } from '@reduxjs/toolkit';
 import React, { useState, useEffect, MouseEventHandler, useRef } from 'react';
 import { Container } from 'react-bootstrap';
 import { FaCirclePlay, FaCirclePause } from "react-icons/fa6";

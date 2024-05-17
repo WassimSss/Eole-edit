@@ -1,10 +1,15 @@
+/**
+ * Formats the given number of seconds into a string representation of minutes and seconds.
+ * 
+ * @param seconds - The number of seconds to format.
+ * @returns A string representation of minutes and seconds.
+ */
 export const formatSecondsToMinutes = (seconds: number): string => {
-    if (seconds > 60) {
+    // if (seconds > 60) {
         const minutes = Math.floor(seconds / 60);
-        console.log("minutes : ", minutes)
         const remainingSeconds = Math.floor(seconds % 60);
-        return `${minutes}:${Number(remainingSeconds)}`;
-    }
-    return seconds.toFixed(2).toString();
+        return `${minutes}:${(String(remainingSeconds).padStart(2, '0'))}`;
+    // }
+    // return seconds.toFixed(2).toString();
 };
 
