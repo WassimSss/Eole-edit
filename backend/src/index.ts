@@ -1,9 +1,3 @@
-// const express = require('express');
-// const multer = require('multer');
-// const ffmpeg = require('fluent-ffmpeg');
-// const path = require('path');
-// const fs = require('fs');
-
 import express from 'express';
 import multer from 'multer';
 import ffmpeg from 'fluent-ffmpeg';
@@ -14,9 +8,6 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(cors());
-
-// Serve the uploads folder
-app.use('/uploads', express.static('uploads'));
 
 // Create a storage to store the uploaded files on uploads folder
 const storage = multer.diskStorage({
@@ -31,6 +22,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+// Serve the uploads folder
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 /**
  * Normalizes a file name by replacing spaces with underscores and removing any special characters.
  * @param fileName - The original file name.
@@ -52,13 +45,12 @@ app.post('/upload', upload.single('video'), (req: express.Request, res: express.
   if (!file) {
     return res.status(400).send('Please upload a file');
   }
+  const { filename } = file;
 
-  const { path, filename } = file;
-
-  const inputFilePath = path;
+  const inputFilePath = file.path;
   // Create the output file path without forbidden characters
-  const outputFilePath = `uploads/compress-${normalizeFileName(filename)}`;
-
+  const outputFilePath = path.join('uploads', `compress-${normalizeFileName(filename)}`);
+  console.log(" outputFilePath : ", outputFilePath);
   // Compress the video and save it to the output file path
   ffmpeg(inputFilePath)
     .videoCodec('libx264')
@@ -68,7 +60,7 @@ app.post('/upload', upload.single('video'), (req: express.Request, res: express.
     .output(outputFilePath)
     .on('end', () => {
       // delete the original file
-      fs.unlinkSync(path);
+      fs.unlinkSync(inputFilePath);
       res.json({ result: true, file: outputFilePath, message: 'File uploaded and compressed successfully' });
     })
     .on('error', (err: Error) => {
@@ -85,14 +77,19 @@ app.get('/files', (req, res) => {
   fs.readdir(directoryPath, (err: NodeJS.ErrnoException | null, files: string[]) => {
     if (err) {
       console.error('Error getting the files', err);
-      return res.status(500).json({result: false, message : 'Server error'});
+      return res.status(500).json({ result: false, message: 'Server error' });
     }
 
-    res.json({ result: true, files })
+    const formattedFiles = files.map((file: string) => {
+      return {
+        url: `/uploads/${file}`,
+        name: file,
+      };
+    });
+
+    res.json({ result: true, files: formattedFiles });
   });
-
-
-})
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

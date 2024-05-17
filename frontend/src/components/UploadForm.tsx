@@ -14,6 +14,7 @@ interface UploadFormProps {
 
 class UploadForm extends Component<UploadFormProps, UploadFormState> {
 
+    // Initialize the state
     constructor(props: { onUploadComplete: Function }) {
         super(props);
         this.state = {
@@ -72,7 +73,6 @@ class UploadForm extends Component<UploadFormProps, UploadFormState> {
             } else {
                 toast.error(data.message);
             }
-            console.log(data);
         } catch (error) {
             console.error('Error uploading the file', error);
         }

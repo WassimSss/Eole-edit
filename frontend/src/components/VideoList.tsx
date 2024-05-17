@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, MouseEventHandler } from 'react';
 import { Container } from 'react-bootstrap';
 
 interface VideoListProps {
   refreshList: boolean;
+  handlePlayVideo: Function;
 }
 
-const VideoList: React.FC<VideoListProps> = ({ refreshList }) => {
-  const [videos, setVideos] = useState<string[]>([]);
+interface videoObject{
+  name: string;
+  url: string;
+}
+const VideoList: React.FC<VideoListProps> = ({ refreshList, handlePlayVideo }) => {
+  const [videos, setVideos] = useState<videoObject[]>([]);
 
   /**
    * Loads videos from the server and updates the state with the fetched data.
@@ -31,9 +36,9 @@ const VideoList: React.FC<VideoListProps> = ({ refreshList }) => {
       <h2>Liste des vidéos</h2>
       <ul className='list-unstyled d-flex flex-wrap justify-content-center align-items-center'>
         {videos.map((video, index) => {
-          const formattedName = video.split('.')[0];
+          const formattedName = video.name.split('.')[0];
           return (
-            <li key={index} className='m-2' style={{ flex: '0 0 25%', maxWidth: '25%' }}>
+            <li key={index} className='m-2' style={{ flex: '0 0 25%', maxWidth: '25%' }} onClick={() => handlePlayVideo(video.url)}>
               <button type="button" className="btn btn-dark w-100">{formattedName}</button>
             </li>
           );
