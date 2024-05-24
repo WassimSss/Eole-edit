@@ -1,8 +1,8 @@
 import express from 'express';
-import multer from 'multer';
 import ffmpeg from 'fluent-ffmpeg';
-import path from 'path';
 import fs from 'fs';
+import multer from 'multer';
+import path from 'path';
 const cors = require('cors');
 
 const app = express();
@@ -49,6 +49,7 @@ app.post('/upload', upload.single('video'), (req: express.Request, res: express.
   // Check if the file is a video
   const { filename, mimetype } = file;
   if (!mimetype.includes('video')) {
+    fs.unlinkSync(file.path);
     return res.status(400).json({ result: false, message: 'Please upload a video file' });
   }
 

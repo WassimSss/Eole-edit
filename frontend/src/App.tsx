@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
+import { Header } from './components/Header';
 import UploadForm from './components/UploadForm';
 import VideoList from './components/VideoList';
 import VideoPlayer from './components/VideoPlayer';
-import { Header } from './components/Header';
-import { Container } from 'react-bootstrap';
 
 const App: React.FC = () => {
   const [refreshList, setRefreshList] = useState<boolean>(false);

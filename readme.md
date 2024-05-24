@@ -27,13 +27,15 @@ This is a web application that allows you to upload and compress video files. It
      ```bash
     yarn install
 
-3. Download the Fluent FFmpeg zip file for your operating system from [ffmpeg.org](https://ffmpeg.org/download.html).
+3. Delete the .gitkeep file in the `uploads` directory.
 
-4. Extract the Fluent FFmpeg zip file and locate the `bin` directory.
+4. Download the Fluent FFmpeg zip file for your operating system from [ffmpeg.org](https://ffmpeg.org/download.html).
 
-5. Add the `bin` directory to the system's PATH environment variable.
+5. Extract the Fluent FFmpeg zip file and locate the `bin` directory.
 
-6. Start backend 
+6. Add the `bin` directory to the system's PATH environment variable.
+
+7. Start backend 
 
     ```bash
     yarn dev
@@ -43,7 +45,7 @@ This is a web application that allows you to upload and compress video files. It
     npm run dev
     ```
 
-7. Start frontend
+8. Start frontend
     ```bash
     yarn start
     ```
@@ -52,7 +54,7 @@ This is a web application that allows you to upload and compress video files. It
     npm run start
     ```
 
-8. Enjoy !
+9. Compress !
 
 ## Usage
 

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, MouseEventHandler, useRef } from 'react';
+import React, { MouseEventHandler, useEffect, useRef, useState } from 'react';
 import { Container } from 'react-bootstrap';
-import { FaCirclePlay, FaCirclePause } from "react-icons/fa6";
+import { FaCirclePlay } from "react-icons/fa6";
 import { IoCloseSharp } from "react-icons/io5";
 import { formatSecondsToMinutes } from '../modules/formatSecondsToMinutes';
 
@@ -34,8 +34,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ handleCloseVideo, urlVideoPla
      */
     const handleTimeUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (videoRef.current) {
-            setCurrentTime(Number(e.target.value) * videoRef.current.duration / 100);
-            videoRef.current.currentTime = Number(e.target.value) * videoRef.current.duration / 100;
+            const time = Number(e.target.value) * videoRef.current.duration / 100
+            setCurrentTime(time);
+            videoRef.current.currentTime = time;
         }
     }
 
@@ -46,7 +47,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ handleCloseVideo, urlVideoPla
         // If the video is playing, update the current time every 100ms
         if (isPlaying) {
             interval = setInterval(() => {
-
+                console.log(videoRef.current?.currentTime)
                 if (videoRef.current) {
                     // If the video is at the end, stop playing
                     if (videoRef.current.currentTime / videoRef.current.duration * 100 === 100) {
@@ -61,6 +62,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ handleCloseVideo, urlVideoPla
         // Clear the interval when the video is paused, finished or when the component unmounts
         return () => {
             if (interval) {
+                console.log('clearing interval')
                 clearInterval(interval);
             }
         };
@@ -69,7 +71,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ handleCloseVideo, urlVideoPla
     return (
         <Container className='w-50 h-50 mt-4'>
 
-            
+
             <div className='position-relative'>
                 <span className='position-absolute top-0 end-0 z-3 fs-3 me-1' onClick={handleCloseVideo} style={{ cursor: "pointer" }}>
                     <IoCloseSharp />
